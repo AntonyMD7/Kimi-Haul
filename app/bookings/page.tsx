@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Navbar } from "@/components/navbar"
@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Calendar, MapPin, Clock, DollarSign, Truck, CheckCircle, AlertCircle } from "lucide-react"
+import { Calendar, MapPin, Clock, DollarSign, Truck, CheckCircle } from "lucide-react"
 
 const mockBookings = [
   {
@@ -55,7 +55,7 @@ const truckOptions = [
   { id: "6", name: "Flatbed Truck", pricePerHour: 55 },
 ]
 
-export default function BookingsPage() {
+function BookingForm() {
   const searchParams = useSearchParams()
   const preselectedTruck = searchParams.get("truck")
 
@@ -81,7 +81,6 @@ export default function BookingsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    // TODO: Implement Supabase booking creation
     setTimeout(() => {
       setLoading(false)
       setSubmitted(true)
@@ -330,5 +329,13 @@ export default function BookingsPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function BookingsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <BookingForm />
+    </Suspense>
   )
 }
